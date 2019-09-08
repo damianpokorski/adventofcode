@@ -62,7 +62,7 @@ class ClaimsCalculator extends Command
         echo 'Part 1:'.PHP_EOL;
         echo '> Final amount of fabric claims overlapping is '.$overlappingArea.' inches.'.PHP_EOL.PHP_EOL;
         echo 'Part 2:'.PHP_EOL;
-        echo '>The one claim that got away has id of: '.$nonOverlappingClaimId.'.'.PHP_EOL;
+        echo '> The one claim that got away has id of: '.$nonOverlappingClaimId.'.'.PHP_EOL;
     }
 
     /**

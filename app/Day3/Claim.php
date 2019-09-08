@@ -4,7 +4,6 @@ namespace App\Day3;
 
 class Claim
 {
-
     private $id     = null;
     private $x      = null;
     private $y      = null;
@@ -15,6 +14,13 @@ class Claim
     {
     }
 
+    /**
+     * Creates Claim object from string
+     *
+     * @throws \InvalidArgumentException when the string does not match the regular expression
+     * @param string $string
+     * @return Claim
+     */
     public static function fromString(string $string): Claim
     {
         // Validate input string against regex
@@ -25,11 +31,11 @@ class Claim
 
         // Map matches into a new object
         return (new Claim())
-        ->setId($matches[1][0])
-        ->setX($matches[2][0])
-        ->setY($matches[3][0])
-        ->setWidth($matches[4][0])
-        ->setHeight($matches[5][0]);
+            ->setId($matches[1][0])
+            ->setX($matches[2][0])
+            ->setY($matches[3][0])
+            ->setWidth($matches[4][0])
+            ->setHeight($matches[5][0]);
     }
 
     public function __toString(): String
@@ -107,14 +113,6 @@ class Claim
 
         // Return only instances, ignore nulls
         $overlaps = \array_filter($overlaps, 'is_object');
-
-        // // Now we recurse this function until we make sure that multiple overlapping areas (pairs) are only reported once
-        // if ($recurse) {
-        //     $overlapsRecursed = Claim::findOverlaping($overlaps, false);
-        //     if (count($overlaps) != count($overlapsRecursed)) {
-        //         return Claim::findOverlaping($overlapsRecursed);
-        //     }
-        // }
 
         return $overlaps;
     }

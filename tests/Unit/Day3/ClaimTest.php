@@ -57,13 +57,17 @@ class ClaimTest extends TestCase
 
         $overlaps = Claim::findOverlaping($claims);
 
-        var_dump($overlaps);
-
         // Assert Id's 1 & 2 are overlapping
         $this->assertContains('1', $overlaps[0]->getId());
         $this->assertContains('2', $overlaps[0]->getId());
         
-        // Assert the square area of the overlap is 
+        // Assert the square area of the overlap is
         $this->assertEquals(4, $overlaps[0]->getArea());
+    }
+
+    public function testClaimsSplitting()
+    {
+        $claims = Claim::fromString('#1 @ 1,1: 5x5')->split();
+        $this->assertEquals(25, count($claims));
     }
 }
