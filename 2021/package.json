@@ -8,7 +8,8 @@
     "day1":"clear  && ts-node day1.ts",
     "day2":"clear  && ts-node day2.ts",
     "day3":"clear  && ts-node day3.ts",
-    "day4":"clear  && ts-node day4.ts"
+    "day4":"clear  && ts-node day4.ts",
+    "day5":"clear  && ts-node day5.ts"
   },
   "keywords": [],
   "author": "",
