@@ -4,12 +4,6 @@ interface IClockRead {
   values: string[];
 };
 
-interface IWire {
-  initialConnection: string;
-  correctConnection: string;
-  potentialConnections: string[];
-}
-
 // test data
 // const data = [
 //   // Small test
@@ -163,6 +157,6 @@ const result = clocks.map(clock => {
 
 
 console.log({
-  ["Part 1"]: clocks.map((clock) => uniqueCountMatches(clock).length).reduce((a,b) => a+b, 0),
+  ["Part 1"]: clocks.map((clock) => (clock.values).filter(value => [2,3,4,7].includes(value.length)).length).reduce((a,b) => a+b, 0),
   ["Part 2"]: result
 });
