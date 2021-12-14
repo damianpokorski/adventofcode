@@ -92,9 +92,6 @@ const cheatSheet = segmentDisplayLookUp.reduce((counters, set) => {
   return counters;
 }, {} as Record<string, number>);
 
-console.log({letterCountsCorrect: cheatSheet});
-
-
 // Part 2 - Detective work
 const result = clocks.map(clock => {
   // 
@@ -128,10 +125,7 @@ const result = clocks.map(clock => {
   // After initial pass some of the more refined guesses can be made
   wiresSolved["c"] = Object.keys(letterCounts).find(letterCountWire => letterCounts[letterCountWire] == 8 && letterCountWire !== wiresSolved.a);
   wiresSolved["d"] = Object.keys(letterCounts).filter(letterCountWire => letterCounts[letterCountWire] == 7 && [...pairs["4"].confusing].includes(letterCountWire));
-  wiresSolved["g"] = Object.keys(letterCounts).filter(letterCountWire => letterCounts[letterCountWire] == 7 && ![...pairs["4"].confusing].includes(letterCountWire));
-
-  // Console log state
-  console.log({solution: wiresSolved});  
+  wiresSolved["g"] = Object.keys(letterCounts).filter(letterCountWire => letterCounts[letterCountWire] == 7 && ![...pairs["4"].confusing].includes(letterCountWire)); 
 
   // Unjumble the wires
   const valuesUnjumbled = clock.values.map(value => {
