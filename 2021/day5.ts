@@ -1,5 +1,6 @@
 
 import { data } from "./data/day5.data";
+
 // const data = [
 //   {start: {x: 0, y:9}, end: {x: 5, y:9}},
 //   {start: {x: 8, y:0}, end: {x: 0, y:8}},
@@ -56,13 +57,6 @@ const coordsToPixels = (horizontalOnly = true) => data.map(line => {
 
 const getOverlappingPixels = (lines: Record<string, number>) => Object.keys(lines).filter(key => lines[key] > 1);
 
-const lines = coordsToPixels(true);
-
-// console.log({
-//   ["Part 1"]: getOverlappingPixels(lines).length
-// })
-
-
 const mapSize = data
   .map(line => [line.start, line.end])
   .flat()
@@ -75,13 +69,13 @@ console.log(mapSize);
 
 const diagonalLines = coordsToPixels(false);
 // Draw it - test one
-for(let y = 0; y < mapSize.x; y++) {
-  const line = [];
-  for(let x = 0; x < mapSize.y; x++) {
-    line.push(diagonalLines[`${x}:${y}`] ? diagonalLines[`${x}:${y}`] : ".")
-  } 
-  console.log(line.join(""));
-}
+// for(let y = 0; y < mapSize.x; y++) {
+//   const line = [];
+//   for(let x = 0; x < mapSize.y; x++) {
+//     line.push(diagonalLines[`${x}:${y}`] ? diagonalLines[`${x}:${y}`] : ".")
+//   } 
+//   console.log(line.join(""));
+// }
 console.log({
   // overlapping: getOverlappingPixels(diagonalLines),
   ["Part 2"]: getOverlappingPixels(diagonalLines).length

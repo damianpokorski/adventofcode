@@ -21,7 +21,8 @@ const positions = [...new Array(maxPosition - minPosition + 1)]
 
 // Part 1
 ((() => {
-  const fuelCostPerTargetPosition = positions.map(position => ({ position, fuel: calculateFuel(data, position) }));
+  const fuelCostPerTargetPosition = positions
+    .map(position => ({ position, fuel: calculateFuel(data, position) }));
 
   const mostEfficientFuelCostPosition = fuelCostPerTargetPosition
     .slice(1)
