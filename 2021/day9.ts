@@ -55,9 +55,7 @@ const points = map
 const lowPoints = points.flat().filter(point => point.lowPoint);
 const risk = lowPoints.map(point => point.height + 1);
 const riskSum = risk.reduce((a,b) => a+b, 0); 
-console.log({
-  ["Part 1"]: riskSum
-});
+
 
 // Find basins by growing
 const pointToHash = (p: Point):string => `${p.x}:${p.y}`;
@@ -72,37 +70,20 @@ function growBasinLowPoints(allPoints: Point[], pointToCheck: Point, pointsInBas
   pointsInBasin.push(pointToHash(pointToCheck));
 
   // If basin grows smoothly left
-  if((pointToCheck.left - pointToCheck.height) >= 1) {
-    const left = allPoints.find(left => left.x == pointToCheck.x-1 && left.y == pointToCheck.y);
-    // If point exists & is not already in basin
-    if(left && !pointsInBasin.includes(pointToHash(left))) {
-      pointsInBasin = [...pointsInBasin, ...growBasinLowPoints(allPoints, left, pointsInBasin)];
+  const spread = [
+    {value: pointToCheck.left, x: pointToCheck.x -1, y: pointToCheck.y},
+    {value: pointToCheck.right, x: pointToCheck.x +1, y: pointToCheck.y},
+    {value: pointToCheck.up, x: pointToCheck.x , y: pointToCheck.y-1},
+    {value: pointToCheck.down, x: pointToCheck.x , y: pointToCheck.y+1},
+  ];
+
+  for(let direction of spread) {
+    const cell = allPoints.find(point => point.x == direction.x && point.y == direction.y);
+    if(cell && !pointsInBasin.includes(pointToHash(cell))) {
+      pointsInBasin = [...pointsInBasin, ...growBasinLowPoints(allPoints, cell, pointsInBasin)];
     }
   }
-  // If basin grows smoothly right
-  if((pointToCheck.right - pointToCheck.height) >= 1) {
-    const right = allPoints.find(right => right.x == pointToCheck.x+1 && right.y == pointToCheck.y);
-    // If point exists & is not already in basin
-    if(right && !pointsInBasin.includes(pointToHash(right))) {
-      pointsInBasin = [...pointsInBasin, ...growBasinLowPoints(allPoints, right, pointsInBasin)];
-    }
-  }
-  // If basin grows smoothly down
-  if((pointToCheck.down - pointToCheck.height) >= 1) {
-    const down = allPoints.find(down => down.y == pointToCheck.y+1 && down.x == pointToCheck.x);
-    // If point exists & is not already in basin
-    if(down && !pointsInBasin.includes(pointToHash(down))) {
-      pointsInBasin = [...pointsInBasin, ...growBasinLowPoints(allPoints, down, pointsInBasin)];
-    }
-  }
-  // If basin grows smoothly up
-  if((pointToCheck.up - pointToCheck.height) >= 1) {
-    const up = allPoints.find(up => up.y == pointToCheck.y-1 && up.x == pointToCheck.x);
-    // If point exists & is not already in basin
-    if(up && !pointsInBasin.includes(pointToHash(up))) {
-      pointsInBasin = [...pointsInBasin, ...growBasinLowPoints(allPoints, up, pointsInBasin)];
-    }
-  }
+
   return [... new Set(pointsInBasin)];
 };
 
@@ -110,6 +91,7 @@ const basins = lowPoints.map(low => growBasinLowPoints(points.flat(), low));
 const basinSizes = basins.map(x => x.length);
 const biggestBasins = basinSizes.sort((a,b) => b - a);
 const multipliedValues = biggestBasins.slice(0, 3).reduce((a,b) => a*b, 1);
+// Rendering the map basins
 points.map((row, y) => {
   console.log(
     row.map((point, x) => {
@@ -145,7 +127,9 @@ points.map((row, y) => {
     }).join("")
   );
 });
-
-console.log([... new Set(basins.flat())].length);
-console.log(biggestBasins);
-console.log(multipliedValues);
+console.log({
+  ["Part 1"]: riskSum
+});
+console.log({
+  ["Part 2"]:multipliedValues
+})
