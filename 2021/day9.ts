@@ -99,28 +99,18 @@ points.map((row, y) => {
         return chalk.bgRed.white.bold(point.height)
       }
       if(basins.filter(basin => basin.includes(pointToHash(point))).length > 0) {
-        let basinColor = chalk.bgGray;
-        const basinIndexModulus = basins.findIndex(basin => basin.includes(pointToHash(point))) % 6;
-        switch(basinIndexModulus) {
-          case 0:
-            basinColor = chalk.bgRed;
-            break;
-          case 1:
-            basinColor = chalk.bgYellow;
-            break;
-          case 2:
-            basinColor = chalk.bgGreen;
-            break;
-          case 3:
-            basinColor = chalk.bgMagenta;
-            break;
-          case 4:
-            basinColor = chalk.bgCyan;
-            break;
-          case 5:
-            basinColor = chalk.bgGreenBright;
-            break;
-        }
+        const backgrounds = [
+          // chalk.bgGray,
+          chalk.bgRed,
+          chalk.bgYellow,
+          chalk.bgGreen,
+          chalk.bgMagenta,
+          chalk.bgCyan,
+          chalk.bgGreenBright,
+          chalk.bgMagentaBright,
+          chalk.bgRedBright
+        ];
+        let basinColor = backgrounds[basins.findIndex(basin => basin.includes(pointToHash(point))) % backgrounds.length];
         return basinColor.black.bold(point.height.toString());
       }
       return chalk.gray(point.height);
