@@ -20,7 +20,7 @@ const dumbos = data.map(row => row.split("").map(dumbo => parseInt(dumbo)));
 (async () => {
 
   let totalFlashes = 0;
-  for (let cycle = 1; cycle <= 100; cycle++) {
+  for (let cycle = 1; cycle <= 1000; cycle++) {
     // Add one energy to all octopuses - Once per cycle
     for (let y = 0; y < dumbos.length; y++) {
       for (let x = 0; x < dumbos[y].length; x++) {
@@ -85,8 +85,6 @@ const dumbos = data.map(row => row.split("").map(dumbo => parseInt(dumbo)));
         }).join(""))
       }
       console.log("");
-
-      // Save total flashes
       
       // Update flashed dumbos to 0
       for (let flashedDumbo of flashedDumbos) {
@@ -94,7 +92,13 @@ const dumbos = data.map(row => row.split("").map(dumbo => parseInt(dumbo)));
       };
       await sleep(slowDown);
     }
+    // Save total flashes
     totalFlashes = totalFlashes + flashedDumbos.length;
+    // Part 2: - Uncomment
+    if(flashedDumbos.length == 100) {
+      console.log(`First cycle all octopuses blink ${cycle}`);
+      process.exit();
+    }
     await sleep(slowDown);
   }
   console.log(`Total flashes post final cycle: ${totalFlashes}`)
