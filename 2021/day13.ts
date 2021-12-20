@@ -87,18 +87,18 @@ class Sheet {
     }
     return fold;
   }
-
+  
   visibleDots(){
     return this.cells.flat().filter(cell => cell == this.cellFull).length;
   }
-
+  
   render() {
     console.clear();
     for(let row of this.cells) {
       console.log(row.join(""))
     }
     console.log("");
-    console.log(`Total visible dots: ${this.visibleDots}`);
+    console.log(`Total visible dots: ${this.visibleDots()}`);
   }
 }
 let visibleDotsAfterFirstFold = null;
@@ -143,11 +143,11 @@ let visibleDotsAfterFirstFold = null;
       sheet = sheet.foldUp(fold.y);
       sheet.render();
       await sleep();
-      
+
       if(visibleDotsAfterFirstFold == null) {
         visibleDotsAfterFirstFold = sheet.visibleDots();
       }
     }
   }
-
+  console.log(`Dots visible after first fold: ${visibleDotsAfterFirstFold}`);
 })();
