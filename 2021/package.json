@@ -18,7 +18,8 @@
     "day11": "clear && ts-node day11.ts",
     "day12": "clear && ts-node day12.ts",
     "day13": "clear && ts-node day13.ts",
-    "day14": "(rm -f data/cache/day14* || true) && clear && node --max_old_space_size=8192 -r ts-node/register day14.ts"
+    "day14": "clear && ts-node day14.ts",
+    "day15": "clear && ts-node day15.ts"
   },
   "keywords": [],
   "author": "",
