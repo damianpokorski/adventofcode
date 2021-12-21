@@ -179,13 +179,13 @@ const findSafestPath = async (mapWraps: number = 1) => {
 
       // Adjust child nodes
       for (let childNode of childNodes) {
-
         if (closedNodes.find(closedNode => closedNode.compare(childNode))) {
           continue;
         }
         // Calculate f g h
         childNode.parent = currentNode;
-        childNode.f = childNode.g = getPathRisk(childNode);
+        childNode.f = childNode.g = childNode.risk + childNode.parent.f;
+        
         if (openNodes.find(openNode => openNode.compare(childNode))) {
           continue;
         }
