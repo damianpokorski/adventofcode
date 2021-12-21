@@ -90,12 +90,13 @@ const findSafestPath = async (mapWraps: number = 1) => {
   let frame = 0;
 
   const render = async (endNode: Point, openNodes: Point[] = [], closedNodes: Point[] = [], force = false) => {
-    console.clear();
-    console.log(`Frame: ${frame++}`);
-    console.log("");
+    
     if (force == false && frame !== 0 && frame % renderModulusEnabled !== 0) {
       return;
     }
+    console.clear();
+    console.log(`Frame: ${frame++}`);
+    console.log("");
     const path = pathFromNode(endNode);
     for (let y = 0; y <= maxY; y++) {
       console.log(map[y].map((point, x) => {
@@ -149,7 +150,9 @@ const findSafestPath = async (mapWraps: number = 1) => {
     let cycles = 0;
     while (openNodes.length > 0) {
       cycles++;
-      console.log(`Cycle: ${cycles}`);
+      if(cycles % 2048 == 0) {
+        console.log(`Cycle: ${cycles}`);
+      }
       // Sort the open nodes & remove the one with lowest F
       currentNode = openNodes.sort((openNode, otherOpenNode) => openNode.f - otherOpenNode.f).shift()
 
