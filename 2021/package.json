@@ -18,12 +18,13 @@
     "day11": "clear && ts-node day11.ts",
     "day12": "clear && ts-node day12.ts",
     "day13": "clear && ts-node day13.ts",
-    "day14": "clear && ts-node day14.ts"
+    "day14": "(rm -f data/cache/day14* || true) && clear && node --max_old_space_size=8192 -r ts-node/register day14.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/node": "^17.0.2",
     "@types/p5": "^1.3.2",
     "chalk": "^4.1.2",
     "p5": "^1.4.0",
