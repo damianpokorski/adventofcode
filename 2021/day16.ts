@@ -7,9 +7,10 @@ const sleep = async () => await new Promise((resolve, reject) => setTimeout(reso
 const data =
   // // Example 1
   // "D2FE28";
-  // Example 2
-  "38006F45291200"
-// "620080001611562C8802118E34";
+  // // Example 2
+  // "38006F45291200"
+  // // Example 3
+  "EE00D40C823060";
 
 class Packet {
   constructor(
@@ -135,11 +136,19 @@ let decode = async (binary: string[], topLevel = false) => {
       currentPacket.isClosed = true;
     } 
     // Operator type 1 - Reading
-    else if (currentPacket.version !== null && currentPacket.typeID !== 4 && currentPacket.lengthType == 11 && currentPacket.lengthTypeValue !== null && buffer.length < currentPacket.lengthTypeValue) {
-      messages.push(`Reading buffer until packets ${currentPacket.lengthTypeValue}`);
+    else if (currentPacket.version !== null && currentPacket.typeID !== 4 && currentPacket.lengthType == 11 && currentPacket.lengthTypeValue !== null && currentPacket.lengthTypeValue > currentPacket.subpackets.length) {
+      const packetsFound = (await decode(buffer)).filter(packet => packet.isClosed);
+      messages.push(`Reading buffer (${buffer.length}) until packets ${packetsFound.length}/${currentPacket.lengthTypeValue} packet(s) are found`);
+      if(packetsFound.length == currentPacket.lengthTypeValue) {
+        currentPacket.subpackets = [...currentPacket.subpackets, ...packetsFound];
+        buffer = [];
+        currentPacket.isClosed = true;
+      }
     } 
-    
-    else {
+    // If current packet is closed stop processing
+    else if (currentPacket.isClosed) {
+      messages.push(`Finished processing, ignoring buffer ${buffer.join("")}`);
+    } else {
       messages.push("Unexpected state");
     }
 
@@ -169,8 +178,8 @@ let decode = async (binary: string[], topLevel = false) => {
 
   // Convert hex to binary
   let binary = parseInt(data, 16).toString(2).split("");
-  // Add leading zeroes
-  binary = [...[... new Array(4 - (binary.length % 4))].map(() => "0"), ...binary];
+  // Add leading zeroes - Only foor example 2?
+  // binary = [...[... new Array(4 - (binary.length % 4))].map(() => "0"), ...binary];
   // Decode
   await decode(binary, true);
 })();
