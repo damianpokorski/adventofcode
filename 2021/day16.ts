@@ -1,7 +1,7 @@
 // Helpers for animations
 import { Instance as Chalk } from "chalk";
 const chalk = new Chalk();
-const sleep = async () => await new Promise((resolve, reject) => setTimeout(resolve, 100));
+const sleep = async () => await new Promise((resolve, reject) => setTimeout(resolve, 1));
 
 
 const data =
@@ -10,7 +10,11 @@ const data =
   // // Example 2
   // "38006F45291200"
   // // Example 3
-  "EE00D40C823060";
+  // "EE00D40C823060";
+  // // Example 4
+  // "8A004A801A8002F478";
+  // // Example 5
+  // "620080001611562C8802118E34";
 
 class Packet {
   constructor(
@@ -26,9 +30,25 @@ class Packet {
     public subpackets: Packet[] = [],
     public isClosed: boolean = false
   ) { }
+
+  public render(indentAmount = 0) {
+    const indentCharacter = " ";
+    let indent = [...new Array(indentAmount)].map(() => indentCharacter).join("");
+    const isLiteral = this.typeID == 4;
+    let detail = ""
+    if(isLiteral) {
+      detail = `${this.literalValue} (${this.literalValues.join(", ")})`;
+    } else {
+      detail = `LType: ${this.lengthType}, LTypeValue: ${this.lengthTypeValue}`
+    }
+    console.log(`${indent}${indentAmount > 0 ? "└── " : ""}V: ${this.version}, ID: ${this.typeID} (${this.typeID == 4 ? "Literal" : "Operator"}), ${detail}`);
+    for(let child of this.subpackets) {
+      child.render(indentAmount+1);
+    }
+  }
 }
 
-let decode = async (binary: string[], topLevel = false) => {
+let decode = async (binary: string[], level = 0) => {
   let index = 0;
 
   // Set up packet tree
@@ -95,7 +115,7 @@ let decode = async (binary: string[], topLevel = false) => {
           outputPackets = [...outputPackets, currentPacket];
 
           // Count bytes to skip per hexadecimal instructions
-          if(topLevel) {
+          if(level == 0) {
             bytesToSkip = 3 - (index % 4);
           }
         } else {
@@ -132,12 +152,12 @@ let decode = async (binary: string[], topLevel = false) => {
     // Operator type 0 - Reading
     else if (currentPacket.version !== null && currentPacket.typeID !== 4 && currentPacket.lengthType == 15 && currentPacket.lengthTypeValue !== null && buffer.length == currentPacket.lengthTypeValue) {
       messages.push(`Processing subpacket: ${buffer}`);
-      currentPacket.subpackets = [...currentPacket.subpackets, ...(await decode(buffer))];
+      currentPacket.subpackets = [...currentPacket.subpackets, ...(await decode(buffer, level + 1))];
       currentPacket.isClosed = true;
     } 
     // Operator type 1 - Reading
     else if (currentPacket.version !== null && currentPacket.typeID !== 4 && currentPacket.lengthType == 11 && currentPacket.lengthTypeValue !== null && currentPacket.lengthTypeValue > currentPacket.subpackets.length) {
-      const packetsFound = (await decode(buffer)).filter(packet => packet.isClosed);
+      const packetsFound = (await decode(buffer, level + 1)).filter(packet => packet.isClosed);
       messages.push(`Reading buffer (${buffer.length}) until packets ${packetsFound.length}/${currentPacket.lengthTypeValue} packet(s) are found`);
       if(packetsFound.length == currentPacket.lengthTypeValue) {
         currentPacket.subpackets = [...currentPacket.subpackets, ...packetsFound];
@@ -154,32 +174,69 @@ let decode = async (binary: string[], topLevel = false) => {
 
     // Render state
     index++;
-    if (topLevel) {
-      await sleep();
-      console.clear();
-      console.log(`Binary: ${binary.join("")} - Length ${binary.length}`);
-      console.log(`Parsed: ${binary.slice(0, index).join("")}`);
-      console.log(`Buffer: ${buffer.join("")}`);
-      console.log("============================");
-      if (messages.length > 0) {
-        console.log(`Messages:`);
-        for (let message of messages) {
-          console.log(` - ${message}`);
-        }
-        console.log("============================");
+    await sleep();
+    console.clear();
+    console.log(`Level ${level}`);
+    console.log(`Binary: ${binary.join("")} - Length ${binary.length}`);
+    console.log(`Parsed: ${binary.slice(0, index).join("")}`);
+    console.log(`Buffer: ${buffer.join("")}`);
+    console.log("");
+    console.log("============================");
+    if (messages.length > 0) {
+      console.log(`Messages:`);
+      for (let message of messages) {
+        console.log(` - ${message}`);
       }
-      console.log(`Current packet tree:`);
-      console.log(JSON.stringify(outputPackets, null, 2));
+      console.log("");
+      console.log("============================");
     }
+    console.log(`Current packet tree (summary):`);
+    for(let packet of outputPackets) {
+      packet.render();
+    }
+    // console.log(JSON.stringify(outputPackets, null, 2));
   }
+  // Prune nulls before final return
+  for(let outputPacket of outputPackets) {
+    outputPacket.subpackets = outputPacket.subpackets.filter(outputSubPacket => outputSubPacket.isClosed);
+  }
+  // Return result
   return outputPackets;
 };
 (async () => {
 
   // Convert hex to binary
-  let binary = parseInt(data, 16).toString(2).split("");
+  // Sensible way - not applicable for this puzzle
+  // let binary = parseInt(data, 16).toString(2).split("");
+  const lookup = {
+    "0": "0000",
+    "1": "0001",
+    "2": "0010",
+    "3": "0011",
+    "4": "0100",
+    "5": "0101",
+    "6": "0110",
+    "7": "0111",
+    "8": "1000",
+    "9": "1001",
+    "A": "1010",
+    "B": "1011",
+    "C": "1100",
+    "D": "1101",
+    "E": "1110",
+    "F": "1111",
+  };
+  const binary = data.split("").map(hex => lookup[hex]).join("").split("");
+
   // Add leading zeroes - Only foor example 2?
   // binary = [...[... new Array(4 - (binary.length % 4))].map(() => "0"), ...binary];
   // Decode
-  await decode(binary, true);
+
+  const resultingPackets = await decode(binary, 0);
+  console.log("");
+  console.log("============================");
+  console.log("Final result: ")
+  for(let resultPacket of resultingPackets) {
+    resultPacket.render();
+  }
 })();
