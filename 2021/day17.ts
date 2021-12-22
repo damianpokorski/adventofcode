@@ -65,8 +65,9 @@ let bestShotMaxHeight: number = null;
 const maxCycles = 10000;
 const maxXVelocity = 20000;
 const maxYVelocity = 20000;
+let distinctVelocities = 0;
 for(let x = 0; x < maxXVelocity; x++) {
-  for(let y = 0; y < maxYVelocity; y++) {
+  for(let y = maxYVelocity*-1; y < maxYVelocity; y++) {
     let cycle = 0;
     let probe = new Probe(x,y);
     let maxY = 0;
@@ -80,6 +81,7 @@ for(let x = 0; x < maxXVelocity; x++) {
       // If we land a hit - end it, check if it's new high score
       if(probe.targetHit()) {
         // console.log("HIT");
+        distinctVelocities++;
         if((bestShotMaxHeight == null || bestShotMaxHeight < maxY)) {
           bestShotVelocity = probe.initialVelocity;
           bestShotMaxHeight = maxY;
@@ -97,5 +99,6 @@ for(let x = 0; x < maxXVelocity; x++) {
 }
 console.log({
   bestShotVelocity,
-  bestShotMaxHeight
+  bestShotMaxHeight,
+  distinctVelocities
 });
