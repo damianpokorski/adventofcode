@@ -23,6 +23,7 @@ class Packet {
     public lengthTypeValue: number = null,
     // Shared
     public subpackets: Packet[] = [],
+    public isClosed: boolean = false
   ) { }
 }
 
@@ -87,6 +88,7 @@ let decode = async (binary: string[], topLevel = false) => {
           currentPacket.literalValue = parseInt(currentPacket.literalValues.join(""), 2);
 
           // Packet type id 4 is now finished
+          currentPacket.isClosed = true;
           let newPacket = new Packet();
           currentPacket = newPacket;
           outputPackets = [...outputPackets, currentPacket];
@@ -130,7 +132,14 @@ let decode = async (binary: string[], topLevel = false) => {
     else if (currentPacket.version !== null && currentPacket.typeID !== 4 && currentPacket.lengthType == 15 && currentPacket.lengthTypeValue !== null && buffer.length == currentPacket.lengthTypeValue) {
       messages.push(`Processing subpacket: ${buffer}`);
       currentPacket.subpackets = [...currentPacket.subpackets, ...(await decode(buffer))];
-    } else {
+      currentPacket.isClosed = true;
+    } 
+    // Operator type 1 - Reading
+    else if (currentPacket.version !== null && currentPacket.typeID !== 4 && currentPacket.lengthType == 11 && currentPacket.lengthTypeValue !== null && buffer.length < currentPacket.lengthTypeValue) {
+      messages.push(`Reading buffer until packets ${currentPacket.lengthTypeValue}`);
+    } 
+    
+    else {
       messages.push("Unexpected state");
     }
 
@@ -155,11 +164,6 @@ let decode = async (binary: string[], topLevel = false) => {
     }
   }
   return outputPackets;
-  // console.log({
-  //   version,
-  //   packetTypeID,
-  //   packets
-  // })
 };
 (async () => {
 
