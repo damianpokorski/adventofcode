@@ -21,7 +21,8 @@
     "day14": "clear && ts-node day14.ts",
     "day15": "clear && ts-node day15.ts",
     "day16": "clear && ts-node day16.ts",
-    "day17": "clear && ts-node day17.ts"
+    "day17": "clear && ts-node day17.ts",
+    "day18": "clear && ts-node day18.ts"
   },
   "keywords": [],
   "author": "",
