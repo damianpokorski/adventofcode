@@ -5,153 +5,153 @@ const chalk = new Chalk();
 
 let debug = false;
 export const data = [
-  {
-    label: "Example 1",
-    input: ["[[[[[9,8],1],2],3],4]"],
-    expected: "[[[[0,9],2],3],4]",
-  },
-  {
-    label: "Example 2",
-    input: ["[7,[6,[5,[4,[3,2]]]]]"],
-    expected: "[7,[6,[5,[7,0]]]]"
-  },
-  {
-    label: "Example 3",
-    input: ["[[6,[5,[4,[3,2]]]],1]"],
-    expected: "[[6,[5,[7,0]]],3]"
-  },
-  {
-    label: "Example 4",
-    input: ["[[3,[2,[1,[7,3]]]],[6,[5,[4,[3,2]]]]]"],
-    expected: "[[3,[2,[8,0]]],[9,[5,[7,0]]]]"
-  },
-  {
-    label: "Example 5",
-    input: ["[[[[[4,3],4],4],[7,[[8,4],9]]],[1,1]]"],
-    expected: "[[[[0,7],4],[[7,8],[6,0]]],[8,1]]"
-  },
-  {
-    label: "Example 6",
-    input: [
-      "[1,1]",
-      "[2,2]",
-      "[3,3]",
-      "[4,4]",
-    ],
-    expected: "[[[[1,1],[2,2]],[3,3]],[4,4]]"
-  },
-  {
-    label: "Example 7",
-    input: [
-      "[1,1]",
-      "[2,2]",
-      "[3,3]",
-      "[4,4]",
-      "[5,5]",
-    ],
-    expected: "[[[[3,0],[5,3]],[4,4]],[5,5]]"
-  },
-  {
-    label: "Example 8",
-    input: [
-      "[1,1]",
-      "[2,2]",
-      "[3,3]",
-      "[4,4]",
-      "[5,5]",
-      "[6,6]",
-    ],
-    expected: "[[[[5,0],[7,4]],[5,5]],[6,6]]"
-  },
-  {
-    label: "Example 9.1",
-    input: [
-      "[[[0,[4,5]],[0,0]],[[[4,5],[2,6]],[9,5]]]",
-      "[7,[[[3,7],[4,3]],[[6,3],[8,8]]]]",
-    ],
-    expected: "[[[[4,0],[5,4]],[[7,7],[6,0]]],[[8,[7,7]],[[7,9],[5,0]]]]"
-  },
-  {
-    label: "Example 9.2",
-    input: [
-      "[[[[4,0],[5,4]],[[7,7],[6,0]]],[[8,[7,7]],[[7,9],[5,0]]]]",
-      "[[2,[[0,8],[3,4]]],[[[6,7],1],[7,[1,6]]]]",
-    ],
-    expected: "[[[[6,7],[6,7]],[[7,7],[0,7]]],[[[8,7],[7,7]],[[8,8],[8,0]]]]"
-  },
-  {
-    label: "Example 9.3",
-    input: [
-      "[[[[6,7],[6,7]],[[7,7],[0,7]]],[[[8,7],[7,7]],[[8,8],[8,0]]]]",
-      "[[[[2,4],7],[6,[0,5]]],[[[6,8],[2,8]],[[2,1],[4,5]]]]",
-    ],
-    expected: "[[[[7,0],[7,7]],[[7,7],[7,8]]],[[[7,7],[8,8]],[[7,7],[8,7]]]]"
-  },
-  {
-    label: "Example 9.4",
-    input: [
-      "[[[[7,0],[7,7]],[[7,7],[7,8]]],[[[7,7],[8,8]],[[7,7],[8,7]]]]",
-      "[7,[5,[[3,8],[1,4]]]]",
-    ],
-    expected: "[[[[7,7],[7,8]],[[9,5],[8,7]]],[[[6,8],[0,8]],[[9,9],[9,0]]]]"
-  },
-  {
-    label: "Example 9.5",
-    input: [
-      "[[[[7,7],[7,8]],[[9,5],[8,7]]],[[[6,8],[0,8]],[[9,9],[9,0]]]]",
-      "[[2,[2,2]],[8,[8,1]]]"
-    ],
-    expected: "[[[[6,6],[6,6]],[[6,0],[6,7]]],[[[7,7],[8,9]],[8,[8,1]]]]"
-  },
-  {
-    label: "Example 9.6",
-    input:[
-      "[[[[6,6],[6,6]],[[6,0],[6,7]]],[[[7,7],[8,9]],[8,[8,1]]]]",
-      "[2,9]"
-    ],
-    expected: "[[[[6,6],[7,7]],[[0,7],[7,7]]],[[[5,5],[5,6]],9]]",
-    maxCycles: 20000 // 8
-  },
-  {
-    label: "Example 9.7",
-    input: [
-      "[[[[6,6],[7,7]],[[0,7],[7,7]]],[[[5,5],[5,6]],9]]",
-      "[1,[[[9,3],9],[[9,0],[0,7]]]]"
-    ],
-    expected: "[[[[7,8],[6,7]],[[6,8],[0,8]]],[[[7,7],[5,0]],[[5,5],[5,6]]]]"    
-  },
-  {
-    label: "Example 9.8",
-    input: [
-      "[[[[7,8],[6,7]],[[6,8],[0,8]]],[[[7,7],[5,0]],[[5,5],[5,6]]]]",
-      "[[[5,[7,4]],7],1]"
-    ],
-    expected: "[[[[7,7],[7,7]],[[8,7],[8,7]]],[[[7,0],[7,7]],9]]"
-  },
-  {
-    label: "Example 9.9",
-    input: [
-      "[[[[7,7],[7,7]],[[8,7],[8,7]]],[[[7,0],[7,7]],9]]",
-      "[[[[4,2],2],6],[8,7]]"
-    ],
-    expected: "[[[[8,7],[7,7]],[[8,6],[7,7]]],[[[0,7],[6,6]],[8,7]]]"
-  },
-  {
-    label: "Example 9.*",
-    input: [
-      "[[[0,[4,5]],[0,0]],[[[4,5],[2,6]],[9,5]]]",
-      "[7,[[[3,7],[4,3]],[[6,3],[8,8]]]]",
-      "[[2,[[0,8],[3,4]]],[[[6,7],1],[7,[1,6]]]]",
-      "[[[[2,4],7],[6,[0,5]]],[[[6,8],[2,8]],[[2,1],[4,5]]]]",
-      "[7,[5,[[3,8],[1,4]]]]",
-      "[[2,[2,2]],[8,[8,1]]]",
-      "[2,9]",
-      "[1,[[[9,3],9],[[9,0],[0,7]]]]",
-      "[[[5,[7,4]],7],1]",
-      "[[[[4,2],2],6],[8,7]]",
-  ],
-    expected: "[[[[8,7],[7,7]],[[8,6],[7,7]]],[[[0,7],[6,6]],[8,7]]]"
-  },
+  // {
+  //   label: "Example 1",
+  //   input: ["[[[[[9,8],1],2],3],4]"],
+  //   expected: "[[[[0,9],2],3],4]",
+  // },
+  // {
+  //   label: "Example 2",
+  //   input: ["[7,[6,[5,[4,[3,2]]]]]"],
+  //   expected: "[7,[6,[5,[7,0]]]]"
+  // },
+  // {
+  //   label: "Example 3",
+  //   input: ["[[6,[5,[4,[3,2]]]],1]"],
+  //   expected: "[[6,[5,[7,0]]],3]"
+  // },
+  // {
+  //   label: "Example 4",
+  //   input: ["[[3,[2,[1,[7,3]]]],[6,[5,[4,[3,2]]]]]"],
+  //   expected: "[[3,[2,[8,0]]],[9,[5,[7,0]]]]"
+  // },
+  // {
+  //   label: "Example 5",
+  //   input: ["[[[[[4,3],4],4],[7,[[8,4],9]]],[1,1]]"],
+  //   expected: "[[[[0,7],4],[[7,8],[6,0]]],[8,1]]"
+  // },
+  // {
+  //   label: "Example 6",
+  //   input: [
+  //     "[1,1]",
+  //     "[2,2]",
+  //     "[3,3]",
+  //     "[4,4]",
+  //   ],
+  //   expected: "[[[[1,1],[2,2]],[3,3]],[4,4]]"
+  // },
+  // {
+  //   label: "Example 7",
+  //   input: [
+  //     "[1,1]",
+  //     "[2,2]",
+  //     "[3,3]",
+  //     "[4,4]",
+  //     "[5,5]",
+  //   ],
+  //   expected: "[[[[3,0],[5,3]],[4,4]],[5,5]]"
+  // },
+  // {
+  //   label: "Example 8",
+  //   input: [
+  //     "[1,1]",
+  //     "[2,2]",
+  //     "[3,3]",
+  //     "[4,4]",
+  //     "[5,5]",
+  //     "[6,6]",
+  //   ],
+  //   expected: "[[[[5,0],[7,4]],[5,5]],[6,6]]"
+  // },
+  // {
+  //   label: "Example 9.1",
+  //   input: [
+  //     "[[[0,[4,5]],[0,0]],[[[4,5],[2,6]],[9,5]]]",
+  //     "[7,[[[3,7],[4,3]],[[6,3],[8,8]]]]",
+  //   ],
+  //   expected: "[[[[4,0],[5,4]],[[7,7],[6,0]]],[[8,[7,7]],[[7,9],[5,0]]]]"
+  // },
+  // {
+  //   label: "Example 9.2",
+  //   input: [
+  //     "[[[[4,0],[5,4]],[[7,7],[6,0]]],[[8,[7,7]],[[7,9],[5,0]]]]",
+  //     "[[2,[[0,8],[3,4]]],[[[6,7],1],[7,[1,6]]]]",
+  //   ],
+  //   expected: "[[[[6,7],[6,7]],[[7,7],[0,7]]],[[[8,7],[7,7]],[[8,8],[8,0]]]]"
+  // },
+  // {
+  //   label: "Example 9.3",
+  //   input: [
+  //     "[[[[6,7],[6,7]],[[7,7],[0,7]]],[[[8,7],[7,7]],[[8,8],[8,0]]]]",
+  //     "[[[[2,4],7],[6,[0,5]]],[[[6,8],[2,8]],[[2,1],[4,5]]]]",
+  //   ],
+  //   expected: "[[[[7,0],[7,7]],[[7,7],[7,8]]],[[[7,7],[8,8]],[[7,7],[8,7]]]]"
+  // },
+  // {
+  //   label: "Example 9.4",
+  //   input: [
+  //     "[[[[7,0],[7,7]],[[7,7],[7,8]]],[[[7,7],[8,8]],[[7,7],[8,7]]]]",
+  //     "[7,[5,[[3,8],[1,4]]]]",
+  //   ],
+  //   expected: "[[[[7,7],[7,8]],[[9,5],[8,7]]],[[[6,8],[0,8]],[[9,9],[9,0]]]]"
+  // },
+  // {
+  //   label: "Example 9.5",
+  //   input: [
+  //     "[[[[7,7],[7,8]],[[9,5],[8,7]]],[[[6,8],[0,8]],[[9,9],[9,0]]]]",
+  //     "[[2,[2,2]],[8,[8,1]]]"
+  //   ],
+  //   expected: "[[[[6,6],[6,6]],[[6,0],[6,7]]],[[[7,7],[8,9]],[8,[8,1]]]]"
+  // },
+  // {
+  //   label: "Example 9.6",
+  //   input:[
+  //     "[[[[6,6],[6,6]],[[6,0],[6,7]]],[[[7,7],[8,9]],[8,[8,1]]]]",
+  //     "[2,9]"
+  //   ],
+  //   expected: "[[[[6,6],[7,7]],[[0,7],[7,7]]],[[[5,5],[5,6]],9]]",
+  //   maxCycles: 20000 // 8
+  // },
+  // {
+  //   label: "Example 9.7",
+  //   input: [
+  //     "[[[[6,6],[7,7]],[[0,7],[7,7]]],[[[5,5],[5,6]],9]]",
+  //     "[1,[[[9,3],9],[[9,0],[0,7]]]]"
+  //   ],
+  //   expected: "[[[[7,8],[6,7]],[[6,8],[0,8]]],[[[7,7],[5,0]],[[5,5],[5,6]]]]"    
+  // },
+  // {
+  //   label: "Example 9.8",
+  //   input: [
+  //     "[[[[7,8],[6,7]],[[6,8],[0,8]]],[[[7,7],[5,0]],[[5,5],[5,6]]]]",
+  //     "[[[5,[7,4]],7],1]"
+  //   ],
+  //   expected: "[[[[7,7],[7,7]],[[8,7],[8,7]]],[[[7,0],[7,7]],9]]"
+  // },
+  // {
+  //   label: "Example 9.9",
+  //   input: [
+  //     "[[[[7,7],[7,7]],[[8,7],[8,7]]],[[[7,0],[7,7]],9]]",
+  //     "[[[[4,2],2],6],[8,7]]"
+  //   ],
+  //   expected: "[[[[8,7],[7,7]],[[8,6],[7,7]]],[[[0,7],[6,6]],[8,7]]]"
+  // },
+  // {
+  //   label: "Example 9.*",
+  //   input: [
+  //     "[[[0,[4,5]],[0,0]],[[[4,5],[2,6]],[9,5]]]",
+  //     "[7,[[[3,7],[4,3]],[[6,3],[8,8]]]]",
+  //     "[[2,[[0,8],[3,4]]],[[[6,7],1],[7,[1,6]]]]",
+  //     "[[[[2,4],7],[6,[0,5]]],[[[6,8],[2,8]],[[2,1],[4,5]]]]",
+  //     "[7,[5,[[3,8],[1,4]]]]",
+  //     "[[2,[2,2]],[8,[8,1]]]",
+  //     "[2,9]",
+  //     "[1,[[[9,3],9],[[9,0],[0,7]]]]",
+  //     "[[[5,[7,4]],7],1]",
+  //     "[[[[4,2],2],6],[8,7]]",
+  // ],
+  //   expected: "[[[[8,7],[7,7]],[[8,6],[7,7]]],[[[0,7],[6,6]],[8,7]]]"
+  // },
   {
     label: "Puzzle",
     input: [
@@ -416,48 +416,48 @@ const styleResult = (rawInput: string) => {
 
 
 // Iterate through puzzles
-// for(let puzzle of data) {
-//   console.log("")
-//   console.log(chalk.gray(` ${puzzle.label} `.padStart(24, "=").padEnd(36, "=")));
-//   console.log(`Puzzle input:    `);
-//   for(let input of puzzle.input) {
-//     console.log(` + ${chalk.bold(styleResult(input))}`)
-//   }
-//   // Keep going while the changes are happening
-//   let additionsToPerform = [...puzzle.input];
-//   let previousResult = null;
-//   while(additionsToPerform.length > 0) {
-//     let nextAddition = additionsToPerform.splice(0, 1).join("");
-//     // If there's a previous result - wrap it into next one as a pair
-//     if(previousResult !== null) {
-//       nextAddition = `[${previousResult},${nextAddition}]`;
-//       console.log(`Reducing together with next pair :`);
-//       console.log(`    ${styleResult(nextAddition)}`)
-//     }
-//     // Keep reducing until no more left
-//     let reduceResult:ReduceResult = null;
-//     while((reduceResult == null || reduceResult.exploded || reduceResult.split)) {
-//       let state = reduceResult == null ? nextAddition : reduceResult.result;
-//       reduceResult = reduceSnailMath(state);
+for(let puzzle of data) {
+  console.log("")
+  console.log(chalk.gray(` ${puzzle.label} `.padStart(24, "=").padEnd(36, "=")));
+  console.log(`Puzzle input:    `);
+  for(let input of puzzle.input) {
+    console.log(` + ${chalk.bold(styleResult(input))}`)
+  }
+  // Keep going while the changes are happening
+  let additionsToPerform = [...puzzle.input];
+  let previousResult = null;
+  while(additionsToPerform.length > 0) {
+    let nextAddition = additionsToPerform.splice(0, 1).join("");
+    // If there's a previous result - wrap it into next one as a pair
+    if(previousResult !== null) {
+      nextAddition = `[${previousResult},${nextAddition}]`;
+      console.log(`Reducing together with next pair :`);
+      console.log(`    ${styleResult(nextAddition)}`)
+    }
+    // Keep reducing until no more left
+    let reduceResult:ReduceResult = null;
+    while((reduceResult == null || reduceResult.exploded || reduceResult.split)) {
+      let state = reduceResult == null ? nextAddition : reduceResult.result;
+      reduceResult = reduceSnailMath(state);
     
-//       console.log(`${
-//         reduceResult.exploded == false && reduceResult.split == false 
-//         ? "No change:      " 
-//         : (reduceResult.exploded 
-//           ? (""+chalk.bgYellowBright.black.bold("Exploded") + ":") 
-//           : ""+chalk.bgCyan("Splitted") +": ")} ${styleResult(reduceResult.result)}`);
-//     }
-//     previousResult = reduceResult.result;
-//   }
-//   console.log("")
-//   console.log(`${chalk.bgGray.white.bold("Expected output")}: ${puzzle.expected}`);
-//   console.log(`Reduced output:  ${previousResult}`);
-//   console.log(`Status:          ${previousResult == puzzle.expected ? chalk.bgGreen.white.bold("Success") : chalk.bgRed.white.bold("Failure")}`);
-//   console.log(`Magnitude        ${Tree.from(JSON.parse(previousResult)).magnitude()}`);
-//   if(puzzle.expected !== null && previousResult !== puzzle.expected) {
-//     break;
-//   }
-// }
+      console.log(`${
+        reduceResult.exploded == false && reduceResult.split == false 
+        ? "No change:      " 
+        : (reduceResult.exploded 
+          ? (""+chalk.bgYellowBright.black.bold("Exploded") + ":") 
+          : ""+chalk.bgCyan("Splitted") +": ")} ${styleResult(reduceResult.result)}`);
+    }
+    previousResult = reduceResult.result;
+  }
+  console.log("")
+  console.log(`${chalk.bgGray.white.bold("Expected output")}: ${puzzle.expected}`);
+  console.log(`Reduced output:  ${previousResult}`);
+  console.log(`Status:          ${previousResult == puzzle.expected ? chalk.bgGreen.white.bold("Success") : chalk.bgRed.white.bold("Failure")}`);
+  console.log(`Magnitude        ${Tree.from(JSON.parse(previousResult)).magnitude()}`);
+  if(puzzle.expected !== null && previousResult !== puzzle.expected) {
+    break;
+  }
+}
 
 const quickReduce = (rawInput: string) => {
   let reduceResult:ReduceResult = null;
@@ -486,7 +486,7 @@ const dataPart2 = [
   // "[[[[5,2],5],[8,[3,7]]],[[5,[7,5]],[4,4]]]",
   ...inputLines
 ].map(raw => quickReduce(raw));
-console.log(dataPart2);
+// console.log(dataPart2);
 let maxMagnitude = 0;
 for(let x = 0; x < dataPart2.length; x++) {
   for(let y = 0; y < dataPart2.length; y++) {
@@ -499,5 +499,3 @@ for(let x = 0; x < dataPart2.length; x++) {
   } 
 }
 console.log(`Max potential magnitude is ${maxMagnitude}`);
-// console.log(getMagnitude(`[[[2,[[7,7],7]],[[5,8],[[9,3],[0,2]]]],[[[0,[5,8]],[[1,7],[9,6]]],[[4,[1,2]],[[1,4],2]]]]`));
-// console.log(getMagnitude(`[[[[7,8],[6,6]],[[6,0],[7,7]]],[[[7,8],[8,8]],[[7,9],[0,6]]]]`));
