@@ -1,5 +1,6 @@
 
 import { Instance as Chalk } from "chalk";
+import {data as inputLines} from "./data/day18.data";
 const chalk = new Chalk();
 
 let debug = false;
@@ -150,6 +151,13 @@ export const data = [
       "[[[[4,2],2],6],[8,7]]",
   ],
     expected: "[[[[8,7],[7,7]],[[8,6],[7,7]]],[[[0,7],[6,6]],[8,7]]]"
+  },
+  {
+    label: "Puzzle",
+    input: [
+      ...inputLines
+    ],
+    expected: "[[[[7,7],[8,8]],[[0,8],[9,8]]],[[9,3],[8,[2,6]]]]"
   }
 ];
 
@@ -160,62 +168,69 @@ interface ReduceResult {
   split: boolean;
 }
 // let idCounter = 0;
-// class Tree<T> {
-//   // id: number = idCounter++;
-//   constructor(
-//     public left: T|Tree<T>|null = null,
-//     public right: T|Tree<T>|null = null, 
-//   ) {
+class Tree {
+  // id: number = idCounter++;
+  constructor(
+    public left: number|Tree|null = null,
+    public right: number|Tree|null = null, 
+  ) {
 
-//   }
-//   // Pair array into tree
-//   static from<T>(value: T|any[]) {
-//     const tree = new Tree();
-//     const [left, right] = value as any[];
-//     tree.left = Array.isArray(left) ? Tree.from<T>(left) : (left||null);
-//     tree.right = Array.isArray(right) ? Tree.from<T>(right) : (right||null);
-//     return tree;
-//   }
-//   canTraverseLeft() {
-//     // Can be traversed into
-//     return Object.keys(this.left).includes("left");
-//   }
-//   canTraverseRight() {
-//     // Can be traversed into
-//     return Object.keys(this.right).includes("left");
-//   }
-//   // Create tree
-//   traverseUntil(parentStack:Tree<T>[] = [], depth = 0, condition = (node: Tree<T>, parentStack:Tree<T>[] = [], depth: number):boolean => false) {
-//     // Evaluate condition if we're looking at a value
-//     if(!this.canTraverseLeft()) {
-//       console.log(`Got ${this.left as T}, depth ${depth}`);
-//       // If condition is met, stop the traversing
-//       if(condition(this, parentStack, depth)) {
-//         return;
-//       }
-//     } else {
-//       console.log(`Traversing deeper left, ${depth}`);
-//       (this.left as Tree<T>).traverseUntil([...parentStack, this], depth+1, condition);
-//     }
-//     // Evaluate condition if we are looking at a value
-//     if(!this.canTraverseRight()) {
-//       console.log(`Got ${this.right as T}, depth: ${depth}`);
-//       // If condition is met, stop the traversing
-//       if(condition(this, parentStack, depth)) {
-//         return;
-//       }
-//     } else {
-//       console.log(`Traversing deeper right, ${depth}`);
-//       (this.right as Tree<T>).traverseUntil([...parentStack, this], depth+1, condition);
-//     }
-//   }
-//   serialize(): any {
-//     return [
-//       this.canTraverseLeft() ? (this.left as Tree<T>).serialize() : this.left as T,
-//       this.canTraverseRight() ? (this.right as Tree<T>).serialize() : this.right as T,
-//     ]
-//   }
-// }
+  }
+  // Pair array into tree
+  static from(value: number|any[]) {
+    const tree = new Tree();
+    const [left, right] = value as any[];
+    tree.left =  Array.isArray(left) ? Tree.from(left) : left;
+    tree.right = Array.isArray(right) ? Tree.from(right) : right;
+    return tree;
+  }
+  canTraverseLeft() {
+    // Can be traversed into
+    return Object.keys(this.left).includes("left");
+  }
+  canTraverseRight() {
+    // Can be traversed into
+    return Object.keys(this.right).includes("left");
+  }
+  magnitude(): number {
+    return (
+      (this.canTraverseLeft() ? (this.left as Tree).magnitude() : this.left as number) * 3
+    ) + (
+      (this.canTraverseRight() ? (this.right as Tree).magnitude() : this.right as number) * 2
+    );
+  }
+  // Create tree
+  // traverseUntil(parentStack:Tree<T>[] = [], depth = 0, condition = (node: Tree<T>, parentStack:Tree<T>[] = [], depth: number):boolean => false) {
+  //   // Evaluate condition if we're looking at a value
+  //   if(!this.canTraverseLeft()) {
+  //     console.log(`Got ${this.left as T}, depth ${depth}`);
+  //     // If condition is met, stop the traversing
+  //     if(condition(this, parentStack, depth)) {
+  //       return;
+  //     }
+  //   } else {
+  //     console.log(`Traversing deeper left, ${depth}`);
+  //     (this.left as Tree<T>).traverseUntil([...parentStack, this], depth+1, condition);
+  //   }
+  //   // Evaluate condition if we are looking at a value
+  //   if(!this.canTraverseRight()) {
+  //     console.log(`Got ${this.right as T}, depth: ${depth}`);
+  //     // If condition is met, stop the traversing
+  //     if(condition(this, parentStack, depth)) {
+  //       return;
+  //     }
+  //   } else {
+  //     console.log(`Traversing deeper right, ${depth}`);
+  //     (this.right as Tree<T>).traverseUntil([...parentStack, this], depth+1, condition);
+  //   }
+  // }
+  // serialize(): any {
+  //   return [
+  //     this.canTraverseLeft() ? (this.left as Tree<T>).serialize() : this.left as T,
+  //     this.canTraverseRight() ? (this.right as Tree<T>).serialize() : this.right as T,
+  //   ]
+  // }
+}
 
 // function reduceSnailMath(raw: string, attemptExplodeOnly = false): ReduceResult {
 //   const root = Tree.from<number>(JSON.parse(raw));
@@ -522,15 +537,10 @@ for(let puzzle of data) {
     }
     // Keep reducing until no more left
     let reduceResult:ReduceResult = null;
-    let maxCycles =puzzle.maxCycles || 20000;
-    let cycles = 0
-    while((cycles++) < maxCycles && (reduceResult == null || reduceResult.exploded || reduceResult.split)) {
+    while((reduceResult == null || reduceResult.exploded || reduceResult.split)) {
       let state = reduceResult == null ? nextAddition : reduceResult.result;
       reduceResult = reduceSnailMath(state);
-      
-
-      //
-      let prefix = ""
+    
       console.log(`${
         reduceResult.exploded == false && reduceResult.split == false 
         ? "No change:      " 
@@ -544,7 +554,10 @@ for(let puzzle of data) {
   console.log(`${chalk.bgGray.white.bold("Expected output")}: ${puzzle.expected}`);
   console.log(`Reduced output:  ${previousResult}`);
   console.log(`Status:          ${previousResult == puzzle.expected ? chalk.bgGreen.white.bold("Success") : chalk.bgRed.white.bold("Failure")}`);
-  if(previousResult !== puzzle.expected) {
+  console.log(`Magnitude        ${Tree.from(JSON.parse(previousResult)).magnitude()}`);
+  if(puzzle.expected !== null && previousResult !== puzzle.expected) {
     break;
   }
 }
+
+// Part 2
