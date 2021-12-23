@@ -1,5 +1,5 @@
 
-const data = {
+export const data = {
   // // Example 1
   // minX:20,
   // maxX:30,
