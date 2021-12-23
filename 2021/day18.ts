@@ -416,45 +416,88 @@ const styleResult = (rawInput: string) => {
 
 
 // Iterate through puzzles
-for(let puzzle of data) {
-  console.log("")
-  console.log(chalk.gray(` ${puzzle.label} `.padStart(24, "=").padEnd(36, "=")));
-  console.log(`Puzzle input:    `);
-  for(let input of puzzle.input) {
-    console.log(` + ${chalk.bold(styleResult(input))}`)
-  }
-  // Keep going while the changes are happening
-  let additionsToPerform = [...puzzle.input];
-  let previousResult = null;
-  while(additionsToPerform.length > 0) {
-    let nextAddition = additionsToPerform.splice(0, 1).join("");
-    // If there's a previous result - wrap it into next one as a pair
-    if(previousResult !== null) {
-      nextAddition = `[${previousResult},${nextAddition}]`;
-      console.log(`Reducing together with next pair :`);
-      console.log(`    ${styleResult(nextAddition)}`)
-    }
-    // Keep reducing until no more left
-    let reduceResult:ReduceResult = null;
-    while((reduceResult == null || reduceResult.exploded || reduceResult.split)) {
-      let state = reduceResult == null ? nextAddition : reduceResult.result;
-      reduceResult = reduceSnailMath(state);
+// for(let puzzle of data) {
+//   console.log("")
+//   console.log(chalk.gray(` ${puzzle.label} `.padStart(24, "=").padEnd(36, "=")));
+//   console.log(`Puzzle input:    `);
+//   for(let input of puzzle.input) {
+//     console.log(` + ${chalk.bold(styleResult(input))}`)
+//   }
+//   // Keep going while the changes are happening
+//   let additionsToPerform = [...puzzle.input];
+//   let previousResult = null;
+//   while(additionsToPerform.length > 0) {
+//     let nextAddition = additionsToPerform.splice(0, 1).join("");
+//     // If there's a previous result - wrap it into next one as a pair
+//     if(previousResult !== null) {
+//       nextAddition = `[${previousResult},${nextAddition}]`;
+//       console.log(`Reducing together with next pair :`);
+//       console.log(`    ${styleResult(nextAddition)}`)
+//     }
+//     // Keep reducing until no more left
+//     let reduceResult:ReduceResult = null;
+//     while((reduceResult == null || reduceResult.exploded || reduceResult.split)) {
+//       let state = reduceResult == null ? nextAddition : reduceResult.result;
+//       reduceResult = reduceSnailMath(state);
     
-      console.log(`${
-        reduceResult.exploded == false && reduceResult.split == false 
-        ? "No change:      " 
-        : (reduceResult.exploded 
-          ? (""+chalk.bgYellowBright.black.bold("Exploded") + ":") 
-          : ""+chalk.bgCyan("Splitted") +": ")} ${styleResult(reduceResult.result)}`);
-    }
-    previousResult = reduceResult.result;
+//       console.log(`${
+//         reduceResult.exploded == false && reduceResult.split == false 
+//         ? "No change:      " 
+//         : (reduceResult.exploded 
+//           ? (""+chalk.bgYellowBright.black.bold("Exploded") + ":") 
+//           : ""+chalk.bgCyan("Splitted") +": ")} ${styleResult(reduceResult.result)}`);
+//     }
+//     previousResult = reduceResult.result;
+//   }
+//   console.log("")
+//   console.log(`${chalk.bgGray.white.bold("Expected output")}: ${puzzle.expected}`);
+//   console.log(`Reduced output:  ${previousResult}`);
+//   console.log(`Status:          ${previousResult == puzzle.expected ? chalk.bgGreen.white.bold("Success") : chalk.bgRed.white.bold("Failure")}`);
+//   console.log(`Magnitude        ${Tree.from(JSON.parse(previousResult)).magnitude()}`);
+//   if(puzzle.expected !== null && previousResult !== puzzle.expected) {
+//     break;
+//   }
+// }
+
+const quickReduce = (rawInput: string) => {
+  let reduceResult:ReduceResult = null;
+  while((reduceResult == null || reduceResult.exploded || reduceResult.split)) {
+    let state = reduceResult == null ? rawInput : reduceResult.result;
+    reduceResult = reduceSnailMath(state);
   }
-  console.log("")
-  console.log(`${chalk.bgGray.white.bold("Expected output")}: ${puzzle.expected}`);
-  console.log(`Reduced output:  ${previousResult}`);
-  console.log(`Status:          ${previousResult == puzzle.expected ? chalk.bgGreen.white.bold("Success") : chalk.bgRed.white.bold("Failure")}`);
-  console.log(`Magnitude        ${Tree.from(JSON.parse(previousResult)).magnitude()}`);
-  if(puzzle.expected !== null && previousResult !== puzzle.expected) {
-    break;
-  }
+  return reduceResult.result;
 }
+
+const getMagnitude = (rawInput: string) => {
+  return Tree.from(JSON.parse(quickReduce(rawInput))).magnitude();
+}
+
+const dataPart2 = [
+  // Example data - Expected magnitude = 3993
+  // "[[[0,[5,8]],[[1,7],[9,6]]],[[4,[1,2]],[[1,4],2]]]",
+  // "[[[5,[2,8]],4],[5,[[9,9],0]]]",
+  // "[6,[[[6,2],[5,6]],[[7,6],[4,7]]]]",
+  // "[[[6,[0,7]],[0,9]],[4,[9,[9,0]]]]",
+  // "[[[7,[6,4]],[3,[1,3]]],[[[5,5],1],9]]",
+  // "[[6,[[7,3],[3,2]]],[[[3,8],[5,7]],4]]",
+  // "[[[[5,4],[7,7]],8],[[8,3],8]]",
+  // "[[9,3],[[9,9],[6,[4,9]]]]",
+  // "[[2,[[7,7],7]],[[5,8],[[9,3],[0,2]]]]",
+  // "[[[[5,2],5],[8,[3,7]]],[[5,[7,5]],[4,4]]]",
+  ...inputLines
+].map(raw => quickReduce(raw));
+console.log(dataPart2);
+let maxMagnitude = 0;
+for(let x = 0; x < dataPart2.length; x++) {
+  for(let y = 0; y < dataPart2.length; y++) {
+    // Dont test against self
+    if(x == y) {
+      continue;
+    }
+    maxMagnitude = Math.max(maxMagnitude, getMagnitude(`[${dataPart2[x]},${dataPart2[y]}]`));
+    maxMagnitude = Math.max(maxMagnitude, getMagnitude(`[${dataPart2[y]},${dataPart2[x]}]`));
+  } 
+}
+console.log(`Max potential magnitude is ${maxMagnitude}`);
+// console.log(getMagnitude(`[[[2,[[7,7],7]],[[5,8],[[9,3],[0,2]]]],[[[0,[5,8]],[[1,7],[9,6]]],[[4,[1,2]],[[1,4],2]]]]`));
+// console.log(getMagnitude(`[[[[7,8],[6,6]],[[6,0],[7,7]]],[[[7,8],[8,8]],[[7,9],[0,6]]]]`));
