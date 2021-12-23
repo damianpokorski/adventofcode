@@ -199,95 +199,7 @@ class Tree {
       (this.canTraverseRight() ? (this.right as Tree).magnitude() : this.right as number) * 2
     );
   }
-  // Create tree
-  // traverseUntil(parentStack:Tree<T>[] = [], depth = 0, condition = (node: Tree<T>, parentStack:Tree<T>[] = [], depth: number):boolean => false) {
-  //   // Evaluate condition if we're looking at a value
-  //   if(!this.canTraverseLeft()) {
-  //     console.log(`Got ${this.left as T}, depth ${depth}`);
-  //     // If condition is met, stop the traversing
-  //     if(condition(this, parentStack, depth)) {
-  //       return;
-  //     }
-  //   } else {
-  //     console.log(`Traversing deeper left, ${depth}`);
-  //     (this.left as Tree<T>).traverseUntil([...parentStack, this], depth+1, condition);
-  //   }
-  //   // Evaluate condition if we are looking at a value
-  //   if(!this.canTraverseRight()) {
-  //     console.log(`Got ${this.right as T}, depth: ${depth}`);
-  //     // If condition is met, stop the traversing
-  //     if(condition(this, parentStack, depth)) {
-  //       return;
-  //     }
-  //   } else {
-  //     console.log(`Traversing deeper right, ${depth}`);
-  //     (this.right as Tree<T>).traverseUntil([...parentStack, this], depth+1, condition);
-  //   }
-  // }
-  // serialize(): any {
-  //   return [
-  //     this.canTraverseLeft() ? (this.left as Tree<T>).serialize() : this.left as T,
-  //     this.canTraverseRight() ? (this.right as Tree<T>).serialize() : this.right as T,
-  //   ]
-  // }
 }
-
-// function reduceSnailMath(raw: string, attemptExplodeOnly = false): ReduceResult {
-//   const root = Tree.from<number>(JSON.parse(raw));
-//   console.log(JSON.stringify(root, null, 2));
-//   let parentStack = [root];
-//   // Find nodes to explode
-//   let rootBeforeTraversing = JSON.stringify(root.serialize());
-
-//   root.traverseUntil([], 0, (node: Tree<number>, parentStack: Tree<number>[], depth) => {
-//     // We're only checking against value pairs
-//     if(node.canTraverseLeft() || node.canTraverseRight()) {
-//       return false;
-//     }
-
-//     // If we're under depth 4 or more - explosion time
-//     if(depth >= 4) {
-//       // Explosion logic
-//       console.log(parentStack);
-//       // Go through parents upwards
-//       let parentWithValueOnLeft = null as Tree<number>;
-//       for(let parentIndex = parentStack.length-1; parentIndex >= 0; parentIndex--) {
-//         if(!parentStack[parentIndex].canTraverseLeft()) {
-//           console.log("Found a value node on left!");
-//           parentWithValueOnLeft = parentStack[parentIndex];
-//           break;
-//         }
-//       }
-//       // Go through parents upwards
-//       let parentWithValueOnRight = null as Tree<number>;
-//       for(let parentIndex = parentStack.length-1; parentIndex >= 0; parentIndex--) {
-//         if(!parentStack[parentIndex].canTraverseRight()) {
-//           console.log(`Found a value node on right!${parentStack[parentIndex].right}`);
-//           parentWithValueOnRight = parentStack[parentIndex];
-//           // Update value
-//           parentWithValueOnRight.right = (parentWithValueOnRight.right as number) + (node.right as number); 
-//           break;
-//         }
-//       }
-//       return true;
-//     }
-//     return false;
-//   });
-//   // Check if we have managed to explode anyting
-//   let rootAfterTraversing = JSON.stringify(root.serialize());
-//   if(rootBeforeTraversing !== rootAfterTraversing) {
-//     return {
-//       exploded: true,
-//       split: false,
-//       result: rootAfterTraversing
-//     }
-//   }
-//   return {
-//     exploded: false,
-//     split: false,
-//     result: ""
-//   };
-// }
 
 function reduceSnailMath(raw: string, attemptExplodeOnly = false): ReduceResult {
   let left = [] as string[];
@@ -396,14 +308,6 @@ function reduceSnailMath(raw: string, attemptExplodeOnly = false): ReduceResult 
             // Add digit values
             const leftmostDigitsNew = (parseInt(leftmostDigits.join("")) + currentValues[0]).toString().split("");
             
-
-            // console.log({
-            //   leftStart:leftStart.join(""),
-            //   leftDigits: leftmostDigits.join(""),
-            //   leftDigitsNew: leftmostDigitsNew,
-            //   leftEnd: leftEnd.join("")
-            // });
-            
             // Reconstruct left side
             left = (leftStart.join("") + leftmostDigitsNew.join("") + leftEnd.join("")).split("");
             foundLeftSide = true;
@@ -435,11 +339,6 @@ function reduceSnailMath(raw: string, attemptExplodeOnly = false): ReduceResult 
           right.unshift("0");
         }
 
-        // console.log({
-        //   left: left.join(""),
-        //   current: currentCharacter,
-        //   right: right.join("")
-        // })
         // Return - and mark as exploded
         return {
           exploded: true,
@@ -559,5 +458,3 @@ for(let puzzle of data) {
     break;
   }
 }
-
-// Part 2
