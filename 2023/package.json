@@ -6,7 +6,8 @@
   "scripts": {
     "validate": "tsc",
     "execute": "node -r @swc-node/register",
-    "day1": "npm run execute -- day1.ts"
+    "day1": "npm run execute -- day1.ts",
+    "day2": "npm run execute -- day2.ts"
   },
   "author": "",
   "license": "ISC",
