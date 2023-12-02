@@ -1,0 +1,19 @@
+{
+  "name": "2023",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "validate": "tsc",
+    "execute": "node -r @swc-node/register",
+    "day1": "npm run execute -- day1.ts",
+    "day2": "npm run execute -- day2.ts"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@swc-node/register": "^1.6.8",
+    "@swc/cli": "^0.1.63",
+    "@swc/core": "^1.3.100"
+  }
+}
