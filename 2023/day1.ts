@@ -1,4 +1,4 @@
-import { loadDay } from "./_";
+import { loadDay, mapReplace } from "./_";
 
 const solve = (rows: string[], spelledOutLetters= false) => rows.map(row => {
 
@@ -9,15 +9,17 @@ const solve = (rows: string[], spelledOutLetters= false) => rows.map(row => {
     const getDigit = (x:string) => x.replace(/[^\d]*/g, " ").split(" ").filter(x => x);
 
     // Swap one -> 1 etc
-    const swapspelledoutdigit = (x:string) => spelledOutLetters ? x.split("one").join("1")
-        .split("two").join("2")
-        .split("three").join("3")
-        .split("four").join("4")
-        .split("five").join("5")
-        .split("six").join("6")
-        .split("seven").join("7")
-        .split("eight").join("8")
-        .split("nine").join("9") : x;
+    const swapspelledoutdigit = (x:string) => spelledOutLetters ? mapReplace(x, {
+        one: "1",
+        two: "2",
+        three: "3",
+        four: "4",
+        five: "5",
+        six: "6",
+        seven: "7",
+        eight: "8",
+        nine: "9"
+    }) : x;
 
     // Matches storage
     let firstNumber = null;
