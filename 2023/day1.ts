@@ -31,7 +31,6 @@ const solve = (rows: string[], spelledOutLetters= false) => rows.map(row => {
         const start = swapspelledoutdigit(row.substring(0, i));
         const end = swapspelledoutdigit(row.substring(row.length - i - 1));
 
-
         // Grab match if new substring has one
         if (firstNumber == null && hasNumber(start)) {
             firstNumber = getDigit(start);
