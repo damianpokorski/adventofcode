@@ -10,7 +10,9 @@
     "day1": "nodemon --exec 'npm run execute -- day1.ts' -e ts,data ",
     "day2": "nodemon --exec 'npm run execute -- day2.ts' -e ts,data ",
     "day3": "nodemon --exec 'npm run execute -- day3.ts' -e ts,data ",
-    "day4": "nodemon --exec 'npm run execute -- day4.ts' -e ts,data "
+    "day4": "nodemon --exec 'npm run execute -- day4.ts' -e ts,data ",
+    "day5": "nodemon day5.js",
+    "day6": "nodemon --exec 'npm run execute -- day6.ts' -e ts,data"
   },
   "author": "",
   "license": "ISC",

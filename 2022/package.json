@@ -8,7 +8,8 @@
     "execute": "node -r @swc-node/register",
     "save-wip": "git add . && git commit --amend --no-edit && git push --force",
     "day1": "nodemon --exec 'npm run execute -- day1.ts' -e ts,data ",
-    "day2": "nodemon --exec 'npm run execute -- day2.ts' -e ts,data "
+    "day2": "nodemon --exec 'npm run execute -- day2.ts' -e ts,data ",
+    "day3": "nodemon --exec 'npm run execute -- day3.ts' -e ts,data "
   },
   "author": "",
   "license": "ISC",
