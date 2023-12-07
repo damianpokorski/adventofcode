@@ -1,13 +1,5 @@
 import { loadDay } from './_';
-interface Scratch {
-  game: string;
-  winningNumbers: number[];
-  elvesNumbers: number[];
-  elvesWinningNumbers: number[];
-  elvesPoints: number;
-  matches: number;
-}
-const scratches = {} as Record<string, Scratch>;
+
 const solve = (rows: string[], ignoreSpaces = false) => {
   const values = {} as Record<string, number[]>;
   for (let row of rows) {
@@ -34,7 +26,14 @@ const solve = (rows: string[], ignoreSpaces = false) => {
     // Iterate through possibilities
     for (let holdDuration = 1; holdDuration < t; holdDuration++) {
       let timeRemaining = t - holdDuration;
+
+      // Do this
       let distanceTravelled = timeRemaining * holdDuration;
+      // Not this
+      // while (timeRemaining > 0) {
+      //   timeRemaining = timeRemaining - 1;
+      //   distanceTravelled = distanceTravelled + holdDuration;
+      // }
       if (distanceTravelled > d) {
         recordBreakers = recordBreakers + 1;
       }
