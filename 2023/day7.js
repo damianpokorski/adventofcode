@@ -1017,7 +1017,6 @@ const result = rows.map(([cards, bid]) => {
         cards = cards.filter(card => card !== 'J');
     }
 
-
     let groups = [1, 2, 3, 4, 5].map(groupSize => {
         return {
             [groupSize.toString()]: [...new Set(cards.filter((card) => cards.filter(cardInHand => cardInHand == card).length == groupSize))]
@@ -1080,14 +1079,12 @@ const result = rows.map(([cards, bid]) => {
         return handDiff;
     }
     // Otherwise compare cards via index
-    // console.log("Comparing cards!");
     const cardOrder = partTwo ? "AKQT98765432J" : "AKQJT98765432";
     const cardStrength = cardOrder.split("").reverse().map((value, index) => ({ [value]: index })).reduce((a, b) => ({ ...a, ...b }), {})
     for (let i = 0; i < handA.cards.length; i++) {
         const cardA = cardStrength[handA.cards[i]];
         const cardB = cardStrength[handB.cards[i]];
         const diff = cardA - cardB;
-        // console.log(`Comparing ${handA.cards[i]} (${cardA}) and ${handB.cards[i]} (${cardB}): ${diff}`)
         if (diff !== 0) {
             return diff;
         }
