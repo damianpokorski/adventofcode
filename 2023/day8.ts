@@ -1,4 +1,4 @@
-import { loadDay } from './_';
+import { loadDay, lcm } from './_';
 const nodes = {} as Record<string, any>;
 
 const solve = (rows: string[], part1 = true) => {
@@ -36,11 +36,6 @@ const solve = (rows: string[], part1 = true) => {
     return findStepsTillTheEndAndLoop(currentNode);
   } else {
     // Part 2
-
-    // LCM Logic
-    // common denominator + least common multiple
-    const gcd = (a: number, b: number): number => (a ? gcd(b % a, a) : b);
-    const lcm = (a: number, b: number) => (a * b) / gcd(a, b);
 
     // Grab starting nodes
     let startingNodes = Object.keys(nodes).filter((x) => x.endsWith('A'));
