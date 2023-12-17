@@ -64,3 +64,17 @@ export const consoleColors = {
   BgWhite: (input: string, resetAfterwards = true) => ['\x1b[47m', input, resetAfterwards ? '\x1b[0m' : ''].join(''),
   BgGray: (input: string, resetAfterwards = true) => ['\x1b[100m', input, resetAfterwards ? '\x1b[0m' : ''].join('')
 };
+
+export const unique = <T>(array: T[]) => [...new Set([...array])];
+
+export const getRowElements = <T>(array: T[][], index: number) => {
+  return array.find((row, rowIndex) => index == rowIndex) ?? [];
+};
+
+export const getColumnElements = <T>(array: T[][], index: number) => {
+  const columnContent = [] as T[];
+  for (let y = 0; y < array.length; y++) {
+    columnContent.push(array[y][index]);
+  }
+  return columnContent;
+};
