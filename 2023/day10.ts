@@ -22,6 +22,59 @@ const connectors = {
 const edges = {} as Record<number, Record<number, Node[]>>;
 
 const solve = (rows: string[], part1 = true) => {
+  // Upscale for part 2
+  if (part1 == false) {
+    // Upscale rows to 3x3
+
+    // Create new matrix
+    const newRows = [...new Array(rows.length * 3)].map(() => [...new Array(rows[0].length * 3)].map(() => '.'));
+
+    // Upscale original rows
+    for (let y = 0; y < rows.length; y++) {
+      for (let x = 0; x < rows[0].length; x++) {
+        const upscaledY = y * 3;
+        const upscaledX = x * 3;
+        const source = rows[y][x];
+        switch (source) {
+          case '|':
+            newRows[upscaledY][upscaledX + 1] = '|';
+            newRows[upscaledY + 1][upscaledX + 1] = source;
+            newRows[upscaledY + 2][upscaledX + 1] = '|';
+            break;
+          case 'F':
+          case 'S':
+            newRows[upscaledY + 1][upscaledX + 2] = '-';
+            newRows[upscaledY + 1][upscaledX + 1] = source;
+            newRows[upscaledY + 2][upscaledX + 1] = '|';
+            break;
+          case 'L':
+            newRows[upscaledY][upscaledX + 1] = '|';
+            newRows[upscaledY + 1][upscaledX + 1] = source;
+            newRows[upscaledY + 1][upscaledX + 2] = '-';
+            break;
+          case '7':
+            newRows[upscaledY + 1][upscaledX] = '-';
+            newRows[upscaledY + 1][upscaledX + 1] = source;
+            newRows[upscaledY + 2][upscaledX + 1] = '|';
+            break;
+          case 'J':
+            newRows[upscaledY][upscaledX + 1] = '|';
+            newRows[upscaledY + 1][upscaledX + 1] = source;
+            newRows[upscaledY + 1][upscaledX] = '-';
+            break;
+          case '-':
+            newRows[upscaledY + 1][upscaledX] = '-';
+            newRows[upscaledY + 1][upscaledX + 1] = source;
+            newRows[upscaledY + 1][upscaledX + 2] = '-';
+            break;
+        }
+      }
+    }
+
+    // Overwrite rows
+    rows = newRows.map((x) => x.join(''));
+  }
+
   let unsolvedPipes = [] as Node[];
   for (let y = 0; y < rows.length; y++) {
     for (let x = 0; x < rows[y].length; x++) {
@@ -46,11 +99,8 @@ const solve = (rows: string[], part1 = true) => {
       }
     }
   }
-  //
-  // console.log(JSON.stringify(edges, null, 2));
 
   const loop = [] as Node[];
-  console.log({ unsolvedPipes });
   // While we have unsolved pipes
   while (unsolvedPipes.length > 0) {
     // Grab first pipe
@@ -59,8 +109,6 @@ const solve = (rows: string[], part1 = true) => {
     // Create a loop
     loop.push(cursor);
     const loopIds = [cursor.id];
-
-    console.log(edges, cursor);
 
     while (true) {
       // Keep finding adjecent nodes - which have not been visited - Grab first one
@@ -77,8 +125,6 @@ const solve = (rows: string[], part1 = true) => {
       loop.push(connection);
       loopIds.push(connection.id);
       // Remove all pipes from current loop from unresolved list
-      // unsolvedPipes = unsolvedPipes.filter((node) => !loopIds.includes(node.id));
-      // console.log({ unsolvedPipes: unsolvedPipes.length });
     }
   }
 
@@ -121,14 +167,15 @@ const solve = (rows: string[], part1 = true) => {
           .filter((node) => !loopIds.includes(node.id as string))
       ];
       tilesToFloodFill.push(...neighbours);
-      // console.log({ tileToFill: tilesToFloodFill.map((x) => x.id) });
     }
   }
 
   let enclosedByLoop = 0;
   // This is mostly visualizing - but also tallies part 2
+  let processedRows = [] as any[][];
   for (let y = 0; y < rows.length; y++) {
     const newRow = [];
+    processedRows.push([]);
     for (let x = 0; x < rows[y].length; x++) {
       const cellId = addIdToNode({ x, y }).id;
       const inLoop = loopIds.includes(cellId);
@@ -153,27 +200,54 @@ const solve = (rows: string[], part1 = true) => {
         text = consoleColors.BgGray(text);
       } else if (filled) {
         text = consoleColors.BgCyan(text);
-      } else if (inner && rows[y][x] == '.') {
+      } else if (inner) {
         enclosedByLoop = enclosedByLoop + 1;
         text = consoleColors.BgMagenta(text);
       }
       newRow.push(text);
+      processedRows[processedRows.length - 1].push({
+        x,
+        y,
+        starting,
+        inLoop,
+        filled,
+        inner,
+        innerAndNotPipe: inner,
+        text
+      });
     }
-    console.log(newRow.join(''));
   }
 
-  console.log({
-    filled: floodFilledIds,
-    enclosedByLoop
-  });
-  return loop.length / 2;
+  // Downscaling - Only for part 2
+  if (part1 == false) {
+    processedRows = processedRows
+      .map((row) => {
+        return row.filter((item) => item.x % 3 == 1 && item.y % 3 == 1);
+      })
+      .filter((row) => row.length > 0);
+  }
+  if (part1 == false) {
+    // Rendered processed data - Only for part 2
+    for (let y = 0; y < processedRows.length; y++) {
+      console.log(processedRows[y].map((x) => x.text).join(''));
+    }
+  }
+
+  // Further point away in the loop
+  if (part1) {
+    return (
+      processedRows
+        .map((row) => row.map((row) => (row.inLoop ? 1 : 0) as number).reduce((a, b) => a + b, 0))
+        .reduce((a, b) => a + b, 0) / 2
+    );
+  }
+  return processedRows
+    .map((row) => row.map((cell) => (cell.innerAndNotPipe ? 1 : 0) as number).reduce((a, b) => a + b, 0))
+    .reduce((a, b) => a + b, 0);
 };
 
-console.log(JSON.stringify(solve(loadDay('day10.data')), null, 2));
-
-// console.log({
-//   part1: solve(loadDay('day10.data'))
-//   // part2: solve(loadDay('day10.data'), false)
-// });
-
-// import * as graphviz from 'graphviz';
+// TLDR: This is overall incredibly inefficient - but it works and resolves result in about 2~min
+console.log({
+  part1: solve(loadDay('day10.data')),
+  part2: solve(loadDay('day10.data'), false)
+});
