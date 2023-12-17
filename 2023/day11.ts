@@ -65,12 +65,8 @@ const solve = (rows: string[], part1 = true) => {
     totalDistance += dist;
   }
   return totalDistance;
-
-  // Render
-  return 0;
 };
 
-// TLDR: This is overall incredibly inefficient - but it works and resolves result in about 2~min
 console.log({
   part1: solve(loadDay('day11.data')),
   part2: solve(loadDay('day11.data'), false)

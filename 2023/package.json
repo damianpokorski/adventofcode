@@ -17,7 +17,8 @@
     "day9": "nodemon --exec 'npm run execute -- day9.ts' -e ts,data ",
     "day10": "nodemon --exec 'npm run execute -- day10.ts' -e ts,data ",
     "day11": "nodemon --exec 'npm run execute -- day11.ts' -e ts,data ",
-    "day11bun": "npx bun day11.ts"
+    "day12": "nodemon --exec 'npm run execute -- day12.ts' -e ts,data ",
+    "day12bun": "npx bun --watch day12.ts"
   },
   "author": "",
   "license": "ISC",
@@ -29,6 +30,7 @@
     "nodemon": "^3.0.2"
   },
   "dependencies": {
-    "graphviz": "^0.0.9"
+    "graphviz": "^0.0.9",
+    "js-combinatorics": "^2.1.2"
   }
 }

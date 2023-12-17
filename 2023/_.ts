@@ -78,3 +78,9 @@ export const getColumnElements = <T>(array: T[][], index: number) => {
   }
   return columnContent;
 };
+
+export const createX = <T>(n: number, value: T) => [...new Array(n)].map(() => value);
+
+export const compareArrays = <T>(a: T[], b: T[]) => {
+  return a.length == b.length && a.every((element, index) => element === b[index]);
+};
